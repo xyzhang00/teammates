@@ -225,35 +225,34 @@ export class InstructorHomePageComponent extends InstructorSessionModalPageCompo
   }
 
   sortSessionsBy(by: SortOrder, courseId: string): void {
-    let sortCourse = this.courseTabModels.filter((model: CourseTabModel) => {
+    let courseToSort = this.courseTabModels.filter((model: CourseTabModel) => {
       return model.course.courseId === courseId;
     });
-    console.log(sortCourse)
-    sortCourse[0].sessionsTableRowModels.sort(this.helper(by));
+    courseToSort[0].sessionsTableRowModels.sort(this.sortSessionOrder(by));
   }
 
-    helper(by: SortOrder): ((a: StudentSession, b: StudentSession) => number) {
-      return ((a: StudentSession, b: StudentSession): number => {
-        let numA = a.feedbackSession.submissionEndTimestamp;
-        let numB = b.feedbackSession.submissionEndTimestamp;
-        let dumA = a.feedbackSession.feedbackSessionName;
-        let dumB = b.feedbackSession.feedbackSessionName;
-        let result: number;
-        switch (by) {
-          case SortOrder.ASC:
-            result = numA > numB ? 1 :
-              (numA === numB) ? dumA > dumB ? 1 : -1 : -1;
-            break;
-          case SortOrder.DESC:
-            result = numA < numB ? 1 :
-              (numA === numB) ? dumA > dumB ? 1 : -1 : -1;
-            break;
-          default:
-            result = 0;
-        }
-        return result;
-      });
-    }
+  sortSessionOrder(by: SortOrder): ((a: SessionsTableRowModel, b: SessionsTableRowModel) => number) {
+    return ((a: SessionsTableRowModel, b: SessionsTableRowModel): number => {
+      let deadlineA = a.feedbackSession.submissionEndTimestamp;
+      let deadlineB = b.feedbackSession.submissionEndTimestamp;
+      let sessionNameA = a.feedbackSession.feedbackSessionName;        
+      let sessionNameB = b.feedbackSession.feedbackSessionName;
+      let result: number;
+      switch (by) {
+        case SortOrder.ASC:
+          result = deadlineA > deadlineB ? 1 :
+            (deadlineA === deadlineB) ? sessionNameA > sessionNameB ? 1 : -1 : -1;
+          break;
+        case SortOrder.DESC:
+          result = deadlineA < deadlineB ? 1 :
+            (deadlineA === deadlineB) ? sessionNameA > sessionNameB ? 1 : -1 : -1;
+          break;
+        default:
+           result = 0;
+      }
+       return result;
+    });
+  }
 
   /**
    * Checks the option selected to sort courses.
@@ -272,7 +271,6 @@ export class InstructorHomePageComponent extends InstructorSessionModalPageCompo
       const modelCopy: CourseTabModel[] = JSON.parse(JSON.stringify(this.courseTabModels));
       modelCopy.sort(this.sortPanelsBy(by));
       this.courseTabModels = modelCopy;
-      console.log(modelCopy)
     }
     this.loadLatestCourses();
   }

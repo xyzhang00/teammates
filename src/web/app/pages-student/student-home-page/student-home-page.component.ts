@@ -187,26 +187,26 @@ export class StudentHomePageComponent implements OnInit {
         ((a.submissionEndTimestamp > b.submissionEndTimestamp) ? 1 : -1) : -1);
   }
 
-  sortSessionsBy(by: SortOrder, courseId: number): void {
-    let sortCourse = this.courses.filter(x => x.course.courseId === courseId);
-    sortCourse[0].feedbackSessions.sort(this.helper(by));
+  sortSessionsBy(by: SortOrder, courseId: string): void {
+    let courseToSort = this.courses.filter(temp => temp.course.courseId === courseId);
+    courseToSort[0].feedbackSessions.sort(this.sortSessionOrder(by));
   }
 
-  helper(by: SortOrder): ((a: StudentSession, b: StudentSession) => number) {
+  sortSessionOrder(by: SortOrder): ((a: StudentSession, b: StudentSession) => number) {
     return ((a: StudentSession, b: StudentSession): number => {
-      let numA = a.session.submissionEndTimestamp;
-      let numB = b.session.submissionEndTimestamp;
-      let dumA = a.session.feedbackSessionName;
-      let dumB = b.session.feedbackSessionName;
+      let deadlineA = a.session.submissionEndTimestamp;
+      let deadlineB = b.session.submissionEndTimestamp;
+      let sessionNameA = a.session.feedbackSessionName;
+      let sessionNameB = b.session.feedbackSessionName;
       let result: number;
       switch (by) {
         case SortOrder.ASC:
-          result = numA > numB ? 1 :
-            (numA === numB) ? dumA > dumB ? 1 : -1 : -1;
+          result = deadlineA > deadlineB ? 1 :
+            (deadlineA === deadlineB) ? sessionNameA > sessionNameB ? 1 : -1 : -1;
           break;
         case SortOrder.DESC:
-          result = numA < numB ? 1 :
-            (numA === numB) ? dumA > dumB ? 1 : -1 : -1;
+          result = deadlineA < deadlineB ? 1 :
+            (deadlineA === deadlineB) ? sessionNameA > sessionNameB ? 1 : -1 : -1;
           break;
         default:
           result = 0;
@@ -217,8 +217,6 @@ export class StudentHomePageComponent implements OnInit {
 
   sortCoursesBy(by: SortBy): void {
     this.sortBy = by;
-    console.log(this.courses[0].feedbackSessions);
-    console.log(this.courses);
     this.courses.sort(this.sortPanelsBy(by));
   }
 

@@ -78,21 +78,19 @@
                   </a>
                 </ng-container>
               </div>
-
             </span>
             <span ngbDropdown>
-              <button id="session-order" class="btn btn-primary btn-sm" ngbDropdownToggle> Sort Order </button>
+              <button id="session-order" class="btn btn-primary btn-sm" ngbDropdownToggle>Sort Order</button>
               <div ngbDropdownMenu (click)="$event.stopPropagation()">
                 <a id="btn-sort-asc" class="btn btn-light btn-sm dropdown-item"
                    ngbTooltip="Sort the sessions by ascending deadline order"
-                   (click)="sortSessionsBy(SortOrder.ASC, courseTabModel.course.courseId)"> Deadline ASC
+                   (click)="sortSessionsBy(SortOrder.ASC, courseTabModel.course.courseId)">Deadline ASC
                 </a>
                 <a id="btn-sort-desc" class="btn btn-light btn-sm dropdown-item"
                    ngbTooltip="Sort the sessions by descending deadline order"
-                   (click)="sortSessionsBy(SortOrder.DESC, courseTabModel.course.courseId)"> Deadline DESC
+                   (click)="sortSessionsBy(SortOrder.DESC, courseTabModel.course.courseId)">Deadline DESC
                 </a>
               </div>
-
             </span>
           </div>
 
