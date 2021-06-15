@@ -187,8 +187,9 @@ export class StudentHomePageComponent implements OnInit {
         ((a.submissionEndTimestamp > b.submissionEndTimestamp) ? 1 : -1) : -1);
   }
 
-  sortSessionsBy(by: SortOrder): void {
-    this.courses[0].feedbackSessions.sort(this.helper(by));
+  sortSessionsBy(by: SortOrder, courseId: number): void {
+    let sortCourse = this.courses.filter(x => x.course.courseId === courseId);
+    sortCourse[0].feedbackSessions.sort(this.helper(by));
   }
 
   helper(by: SortOrder): ((a: StudentSession, b: StudentSession) => number) {
@@ -217,6 +218,7 @@ export class StudentHomePageComponent implements OnInit {
   sortCoursesBy(by: SortBy): void {
     this.sortBy = by;
     console.log(this.courses[0].feedbackSessions);
+    console.log(this.courses);
     this.courses.sort(this.sortPanelsBy(by));
   }
 
