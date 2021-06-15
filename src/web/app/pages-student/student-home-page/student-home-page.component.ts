@@ -43,6 +43,7 @@ export class StudentHomePageComponent implements OnInit {
 
   // enum
   SortBy: typeof SortBy = SortBy;
+  SortOrder: typeof SortOrder = SortOrder;
 
   // Tooltip messages
   studentFeedbackSessionStatusPublished: string =
@@ -186,8 +187,36 @@ export class StudentHomePageComponent implements OnInit {
         ((a.submissionEndTimestamp > b.submissionEndTimestamp) ? 1 : -1) : -1);
   }
 
+  sortSessionsBy(by: SortOrder): void {
+    this.courses[0].feedbackSessions.sort(this.helper(by));
+  }
+
+  helper(by: SortOrder): ((a: StudentSession, b: StudentSession) => number) {
+    return ((a: StudentSession, b: StudentSession): number => {
+      let numA = a.session.submissionEndTimestamp;
+      let numB = b.session.submissionEndTimestamp;
+      let dumA = a.session.feedbackSessionName;
+      let dumB = b.session.feedbackSessionName;
+      let result: number;
+      switch (by) {
+        case SortOrder.ASC:
+          result = numA > numB ? 1 :
+            (numA === numB) ? dumA > dumB ? 1 : -1 : -1;
+          break;
+        case SortOrder.DESC:
+          result = numA < numB ? 1 :
+            (numA === numB) ? dumA > dumB ? 1 : -1 : -1;
+          break;
+        default:
+          result = 0;
+      }
+      return result;
+    });
+  }
+
   sortCoursesBy(by: SortBy): void {
     this.sortBy = by;
+    console.log(this.courses[0].feedbackSessions);
     this.courses.sort(this.sortPanelsBy(by));
   }
 
