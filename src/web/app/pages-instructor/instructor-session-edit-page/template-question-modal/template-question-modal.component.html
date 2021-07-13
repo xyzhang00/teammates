@@ -6,9 +6,9 @@
 </div>
 <div id="template-question-modal" class="modal-body">
   <div class="card margin-top-20px" *ngFor="let templateQuestionModel of templateQuestionModels">
-    <div class="card-header cursor-pointer"
+    <div class="card-header cursor-pointer align-start"
          (click)="templateQuestionModel.isShowDetails = !templateQuestionModel.isShowDetails">
-      <label class="checkbox-label">
+      <label class="checkbox-margin">
         <input type="checkbox" [(ngModel)]="templateQuestionModel.isSelected" (click)="$event.stopPropagation()">
       </label>&nbsp;
       <span [innerHTML]="templateQuestionModel.description" class="template-description"></span>
