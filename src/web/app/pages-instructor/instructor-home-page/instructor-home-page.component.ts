@@ -66,6 +66,7 @@ export class InstructorHomePageComponent extends InstructorSessionModalPageCompo
   SessionsTableColumn: typeof SessionsTableColumn = SessionsTableColumn;
   SessionsTableHeaderColorScheme: typeof SessionsTableHeaderColorScheme = SessionsTableHeaderColorScheme;
   SortBy: typeof SortBy = SortBy;
+  SortOrder: typeof SortOrder = SortOrder;
 
   instructorCoursesSortBy: SortBy = SortBy.COURSE_CREATION_DATE;
 
@@ -222,6 +223,36 @@ export class InstructorHomePageComponent extends InstructorSessionModalPageCompo
             this.statusMessageService.showErrorToast(resp.error.message);
           }, () => this.sortSessionsTableRowModelsEvent(index, SortBy.SESSION_END_DATE));
     }
+  }
+
+  sortSessionsBy(by: SortOrder, courseId: string): void {
+    let courseToSort = this.courseTabModels.filter((model: CourseTabModel) => {
+      return model.course.courseId === courseId;
+    });
+    courseToSort[0].sessionsTableRowModels.sort(this.sortSessionOrder(by));
+  }
+
+  sortSessionOrder(by: SortOrder): ((a: SessionsTableRowModel, b: SessionsTableRowModel) => number) {
+    return ((a: SessionsTableRowModel, b: SessionsTableRowModel): number => {
+      let deadlineA = a.feedbackSession.submissionEndTimestamp;
+      let deadlineB = b.feedbackSession.submissionEndTimestamp;
+      let sessionNameA = a.feedbackSession.feedbackSessionName;        
+      let sessionNameB = b.feedbackSession.feedbackSessionName;
+      let result: number;
+      switch (by) {
+        case SortOrder.ASC:
+          result = deadlineA > deadlineB ? 1 :
+            (deadlineA === deadlineB) ? sessionNameA > sessionNameB ? 1 : -1 : -1;
+          break;
+        case SortOrder.DESC:
+          result = deadlineA < deadlineB ? 1 :
+            (deadlineA === deadlineB) ? sessionNameA > sessionNameB ? 1 : -1 : -1;
+          break;
+        default:
+           result = 0;
+      }
+       return result;
+    });
   }
 
   /**

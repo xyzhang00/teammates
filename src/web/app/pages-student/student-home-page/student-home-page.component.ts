@@ -43,6 +43,7 @@ export class StudentHomePageComponent implements OnInit {
 
   // enum
   SortBy: typeof SortBy = SortBy;
+  SortOrder: typeof SortOrder = SortOrder;
 
   // Tooltip messages
   studentFeedbackSessionStatusPublished: string =
@@ -184,6 +185,34 @@ export class StudentHomePageComponent implements OnInit {
       .sort((a: FeedbackSession, b: FeedbackSession) => (a.createdAtTimestamp >
         b.createdAtTimestamp) ? 1 : (a.createdAtTimestamp === b.createdAtTimestamp) ?
         ((a.submissionEndTimestamp > b.submissionEndTimestamp) ? 1 : -1) : -1);
+  }
+
+  sortSessionsBy(by: SortOrder, courseId: string): void {
+    let courseToSort = this.courses.filter(temp => temp.course.courseId === courseId);
+    courseToSort[0].feedbackSessions.sort(this.sortSessionOrder(by));
+  }
+
+  sortSessionOrder(by: SortOrder): ((a: StudentSession, b: StudentSession) => number) {
+    return ((a: StudentSession, b: StudentSession): number => {
+      let deadlineA = a.session.submissionEndTimestamp;
+      let deadlineB = b.session.submissionEndTimestamp;
+      let sessionNameA = a.session.feedbackSessionName;
+      let sessionNameB = b.session.feedbackSessionName;
+      let result: number;
+      switch (by) {
+        case SortOrder.ASC:
+          result = deadlineA > deadlineB ? 1 :
+            (deadlineA === deadlineB) ? sessionNameA > sessionNameB ? 1 : -1 : -1;
+          break;
+        case SortOrder.DESC:
+          result = deadlineA < deadlineB ? 1 :
+            (deadlineA === deadlineB) ? sessionNameA > sessionNameB ? 1 : -1 : -1;
+          break;
+        default:
+          result = 0;
+      }
+      return result;
+    });
   }
 
   sortCoursesBy(by: SortBy): void {
